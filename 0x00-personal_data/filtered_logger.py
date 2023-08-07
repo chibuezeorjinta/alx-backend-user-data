@@ -14,8 +14,8 @@ def filter_datum(fields: List[str], redaction: str,
                  message: str, separator: str) -> str:
     """Obfuscate a string"""
     for field in fields:
-        message = re.sub(r'(?<={}=).+?(?={})'.format(field,
-                                                     separator), redaction, message)
+        message = re.sub(r'(?<={}=).+?(?={})'.format(
+            field, separator), redaction, message)
     return message
 
 
