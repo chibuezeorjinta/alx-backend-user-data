@@ -3,10 +3,11 @@
 import logging
 import re
 import mysql.connector
-from typing import List
+from typing import List, Tuple, NoReturn
 from os import getenv
 
-PII_FIELDS = ('name', 'email', 'phone', 'ssn', 'password')
+PII_FIELDS: Tuple[str, str, str, str, str] = (
+    'name', 'email', 'phone', 'ssn', 'password')
 
 
 def filter_datum(fields: List[str], redaction: str,
@@ -14,7 +15,7 @@ def filter_datum(fields: List[str], redaction: str,
     """Obfuscate a string"""
     for field in fields:
         message = re.sub(r'(?<={}=).+?(?={})'.format(field,
-                         separator), redaction, message)
+                                                     separator), redaction, message)
     return message
 
 
@@ -36,7 +37,7 @@ class RedactingFormatter(logging.Formatter):
                             self.SEPARATOR)
 
 
-def get_logger():
+def get_logger() -> logging.Logger:
     """create a logger"""
     logger = logging.getLogger('user_data')
     # set level
@@ -63,7 +64,7 @@ def get_db() -> mysql.connector.connection.MySQLConnection:
     return connection_db
 
 
-def main():
+def main() -> NoReturn:
     """Main function. to get a logger and connect to database"""
     database = get_db()
     cursor = database.cursor()
