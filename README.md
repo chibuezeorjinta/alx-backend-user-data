@@ -1,0 +1,1 @@
+How to properly collect an manage user data
