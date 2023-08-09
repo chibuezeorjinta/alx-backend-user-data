@@ -13,7 +13,16 @@ PII_FIELDS: Tuple[str, str, str, str, str] = (
 
 def filter_datum(fields: List[str], redaction: str,
                  message: str, separator: str) -> str:
-    """Obfuscate a string"""
+    """
+    Obfuscate the provided [fields] in the string[message] with
+    the provided [redaction] using [seperator] as a marker.
+    :param fields: list[str] = parts of the message to
+                                                            obfuscate.
+    :param redaction: [str] = replacement characters.
+    :param message: str = provide string to obfuscate
+    :param separator: str = seperator character as a guide.
+    :return: str = obfuscated string.
+    """
     for field in fields:
         message = re.sub(r'(?<={}=).+?(?={})'.format(
             field, separator), redaction, message)
@@ -21,25 +30,41 @@ def filter_datum(fields: List[str], redaction: str,
 
 
 class RedactingFormatter(logging.Formatter):
-    """ Redacting Formatter class"""
+    """
+     Redacting Formatter class.
+     used in creating a logger for the user.
+    """
 
     REDACTION = "***"
     FORMAT = "[HOLBERTON] %(name)s %(levelname)s %(asctime)-15s: %(message)s"
     SEPARATOR = ";"
 
     def __init__(self, fields: List[str] = None):
+        """
+        Class constructor.
+        :param fields: list[str] = list of fields that are
+                                    expected to be obfuscated. None by default.
+        """
         super(RedactingFormatter, self).__init__(self.FORMAT)
         self.fields: List[str] = fields
 
     def format(self, record: logging.LogRecord) -> str:
-        """Run the formatter in a logger format"""
+        """
+        Reformat a given string[record] into a log. Obfuscating
+        fields as needed.
+        :param record: str = A given string record.
+        :return: str = reformatted string.
+        """
         return filter_datum(self.fields, self.REDACTION,
                             super(RedactingFormatter, self).format(record),
                             self.SEPARATOR)
 
 
 def get_logger() -> logging.Logger:
-    """create a logger"""
+    """
+    Create a logger object according to specifications.
+    :return: logging.logger
+    """
     logger = logging.getLogger('user_data')
     # set level
     logger.setLevel(logging.INFO)
@@ -55,6 +80,11 @@ def get_logger() -> logging.Logger:
 
 
 def get_db() -> Union[MySQLConnection, None]:
+    """
+    Log into a mysql server securely.
+    :return: A Mysql connection object or None.
+                    if it fails.
+    """
     # Get database credentials from environment variables with default values
     db_username: str = os.getenv("PERSONAL_DATA_DB_USERNAME", "root")
     db_password: str = os.getenv("PERSONAL_DATA_DB_PASSWORD", "")
