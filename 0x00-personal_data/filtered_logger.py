@@ -3,9 +3,8 @@
 import logging
 import os
 import re
-from mysql import connector
-from mysql.connector.connection import MySQLConnection
-from typing import List, Tuple, Union, NoReturn
+import mysql.connector
+from typing import List, Tuple, Optional, NoReturn
 
 PII_FIELDS: Tuple[str, str, str, str, str] = (
     'name', 'email', 'phone', 'ssn', 'password')
@@ -46,7 +45,7 @@ class RedactingFormatter(logging.Formatter):
                                     expected to be obfuscated. None by default.
         """
         super(RedactingFormatter, self).__init__(self.FORMAT)
-        self.fields: List[str] = fields
+        self.fields: Optional[List[str]] = fields
 
     def format(self, record: logging.LogRecord) -> str:
         """
@@ -79,7 +78,7 @@ def get_logger() -> logging.Logger:
     return logger
 
 
-def get_db() -> Union[MySQLConnection, None]:
+def get_db() -> mysql.connector.connection.MySQLConnection:
     """
     Log into a mysql server securely.
     :return: A Mysql connection object or None.
@@ -93,19 +92,18 @@ def get_db() -> Union[MySQLConnection, None]:
 
     try:
         # Connect to the database
-        connection: MySQLConnection = connector.connect(
+        connection = mysql.connector.connect(
             user=db_username,
             password=db_password,
             host=db_host,
             database=db_name
         )
         return connection
-    except connector.Error as err:
+    except mysql.connector.Error as err:
         print("Error connecting to the database:", err)
-        return None
 
 
-def main() -> NoReturn:
+def main():
     """Main function. to get a logger and connect to database"""
     database = get_db()
     cursor = database.cursor()
