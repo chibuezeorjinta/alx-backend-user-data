@@ -4,7 +4,7 @@ Route module for the API
 """
 from os import getenv
 from api.v1.views import app_views
-from flask import Flask, jsonify, abort, request, Response
+from flask import Flask, jsonify, abort, request
 from flask_cors import (CORS, cross_origin)
 
 app = Flask(__name__)
@@ -44,7 +44,7 @@ def not_found(error) -> str:
 
 
 @app.errorhandler(401)
-def auth_err(error) -> Response:
+def auth_err(error) -> str:
     """
     Authentication failure
     :param error: error
@@ -55,7 +55,7 @@ def auth_err(error) -> Response:
 
 
 @app.errorhandler(403)
-def forbidden_err(err) -> Response:
+def forbidden_err(err) -> str:
     """
     handle forbidden error
     :param err: error
