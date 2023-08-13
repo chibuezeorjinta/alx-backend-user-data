@@ -50,7 +50,7 @@ def auth_err(error) -> str:
     :param error: error
     :return: json to represent the failure
     """
-    return jsonify({"error": "Unauthorized"}), 410
+    return jsonify({"error": "Unauthorized"}), 401
 
 
 @app.errorhandler(403)
