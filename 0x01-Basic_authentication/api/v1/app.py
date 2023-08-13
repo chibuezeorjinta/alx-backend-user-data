@@ -22,7 +22,8 @@ elif getenv("AUTH_TYPE") == "basic_auth":
 
 @app.before_request
 def sort_auth():
-    """To filter each request to know
+    """
+    To filter each request to know
     if it requires auth.
     """
     if auth:
