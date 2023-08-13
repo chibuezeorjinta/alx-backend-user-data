@@ -34,7 +34,7 @@ class Auth:
 
 	def authorization_header(self, request=None) -> Union[str, None]:
 		"""
-		header format
+		Provide a way to extract the authourization header
 		:param request: object = flask request
 		:return: str | None = None for now
 		"""
